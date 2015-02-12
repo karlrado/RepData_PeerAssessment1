@@ -7,25 +7,35 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r}
+```{r, echo=TRUE}
 unzip("activity.zip")
 activity <- read.csv("activity.csv")
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+```{r, echo=TRUE}
 totals <- aggregate(activity$steps, list(activity$date), sum)
 names(totals) <- c("Date", "Steps")
 hist(totals$Steps, 
      main = "Histogram of Total Steps Per Day",
      xlab = "Steps Per Day")
-mean(totals$Steps, na.rm=TRUE)
-median(totals$Steps, na.rm=TRUE)
+mean <- mean(totals$Steps, na.rm=TRUE)
+median <- median(totals$Steps, na.rm=TRUE)
 ```
-
+The mean is `r format(mean, nsmall=2)` steps per day.  
+The median is `r median` steps per day.
 
 ## What is the average daily activity pattern?
-
+```{r, echo=TRUE}
+stepsByInterval <- aggregate(steps ~ interval, activity, "mean")
+plot(stepsByInterval,
+     main="Average Daily Activity in 5-minute Intervals",
+     xlab="Interval",
+     ylab="Average Step Count",
+     type="l")
+maxIndex <- which.max(stepsByInterval$steps)
+```
+The interval with the maximum number of steps is `r stepsByInterval$interval[maxIndex]`
 
 
 ## Imputing missing values

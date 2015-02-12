@@ -14,30 +14,48 @@ activity <- read.csv("activity.csv")
 
 ## What is mean total number of steps taken per day?
 ```{r, echo=TRUE}
-totals <- aggregate(steps ~ date, activity, "sum")
-hist(totals$steps, 
+totalStepsByDay <- aggregate(steps ~ date, activity, "sum")
+hist(totalStepsByDay$steps, 
      main = "Histogram of Total Steps Per Day",
      xlab = "Steps Per Day")
-mean <- mean(totals$steps, na.rm=TRUE)
-median <- median(totals$steps, na.rm=TRUE)
+mean <- mean(totalStepsByDay$steps, na.rm=TRUE)
+median <- median(totalStepsByDay$steps, na.rm=TRUE)
 ```
 The mean is `r format(mean, nsmall=2)` steps per day.  
 The median is `r median` steps per day.
 
 ## What is the average daily activity pattern?
 ```{r, echo=TRUE}
-stepsByInterval <- aggregate(steps ~ interval, activity, "mean")
-plot(stepsByInterval,
+meanStepsByInterval <- aggregate(steps ~ interval, activity, "mean")
+plot(meanStepsByInterval,
      main="Average Daily Activity in 5-minute Intervals",
      xlab="Interval",
      ylab="Average Step Count",
      type="l")
-maxInterval <- stepsByInterval$interval[which.max(stepsByInterval$steps)]
+maxInterval <- meanStepsByInterval$interval[which.max(meanStepsByInterval$steps)]
 ```
-The interval with the maximum number of steps is `r maxInterval`
+The interval with the maximum number of steps is interval `r maxInterval`
 
 
 ## Imputing missing values
+The number of rows with missing values is `r sum(is.na(activity$steps))`
+```{r, echo=TRUE}
+imputed <- activity
+inds <- which(is.na(imputed$steps))
+for (i in inds) {
+    interval <- imputed$interval[i]
+    value <- meanStepsByInterval$steps[meanStepsByInterval$interval == interval]
+    imputed$steps[i] <- value
+}
+totalStepsByDay <- aggregate(steps ~ date, imputed, "sum")
+hist(totalStepsByDay$steps, 
+     main = "Histogram of Total Steps Per Day",
+     xlab = "Steps Per Day")
+mean <- mean(totalStepsByDay$steps, na.rm=TRUE)
+median <- median(totalStepsByDay$steps, na.rm=TRUE)
+```
+The mean is `r format(mean, nsmall=2)` steps per day.  
+The median is `r format(median, nsmall=2)` steps per day.
 
 
 

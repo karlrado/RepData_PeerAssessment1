@@ -14,13 +14,12 @@ activity <- read.csv("activity.csv")
 
 ## What is mean total number of steps taken per day?
 ```{r, echo=TRUE}
-totals <- aggregate(activity$steps, list(activity$date), sum)
-names(totals) <- c("Date", "Steps")
-hist(totals$Steps, 
+totals <- aggregate(steps ~ date, activity, "sum")
+hist(totals$steps, 
      main = "Histogram of Total Steps Per Day",
      xlab = "Steps Per Day")
-mean <- mean(totals$Steps, na.rm=TRUE)
-median <- median(totals$Steps, na.rm=TRUE)
+mean <- mean(totals$steps, na.rm=TRUE)
+median <- median(totals$steps, na.rm=TRUE)
 ```
 The mean is `r format(mean, nsmall=2)` steps per day.  
 The median is `r median` steps per day.
@@ -33,9 +32,9 @@ plot(stepsByInterval,
      xlab="Interval",
      ylab="Average Step Count",
      type="l")
-maxIndex <- which.max(stepsByInterval$steps)
+maxInterval <- stepsByInterval$interval[which.max(stepsByInterval$steps)]
 ```
-The interval with the maximum number of steps is `r stepsByInterval$interval[maxIndex]`
+The interval with the maximum number of steps is `r maxInterval`
 
 
 ## Imputing missing values

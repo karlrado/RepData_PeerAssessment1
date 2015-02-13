@@ -18,8 +18,8 @@ totalStepsByDay <- aggregate(steps ~ date, activity, "sum")
 hist(totalStepsByDay$steps, 
      main = "Histogram of Total Steps Per Day",
      xlab = "Steps Per Day")
-mean <- mean(totalStepsByDay$steps, na.rm=TRUE)
-median <- median(totalStepsByDay$steps, na.rm=TRUE)
+mean <- mean(totalStepsByDay$steps)
+median <- median(totalStepsByDay$steps)
 ```
 The mean is `r format(mean, nsmall=2)` steps per day.  
 The median is `r median` steps per day.
@@ -51,8 +51,8 @@ totalStepsByDay <- aggregate(steps ~ date, imputed, "sum")
 hist(totalStepsByDay$steps, 
      main = "Histogram of Total Steps Per Day",
      xlab = "Steps Per Day")
-mean <- mean(totalStepsByDay$steps, na.rm=TRUE)
-median <- median(totalStepsByDay$steps, na.rm=TRUE)
+mean <- mean(totalStepsByDay$steps)
+median <- median(totalStepsByDay$steps)
 ```
 The mean is `r format(mean, nsmall=2)` steps per day.  
 The median is `r format(median, nsmall=2)` steps per day.
@@ -60,3 +60,20 @@ The median is `r format(median, nsmall=2)` steps per day.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r, echo=TRUE}
+days <- weekdays(as.POSIXlt(imputed$date))
+imputed$dayType <- as.factor(ifelse(days %in% c("Saturday", "Sunday"), "weekend", "weekday"))
+meanStepsByInterval <- aggregate(steps ~ interval, imputed[imputed$dayType == "weekday",], "mean")
+par(mfrow=c(2,1))
+plot(meanStepsByInterval,
+     main="Average Daily Activity in 5-minute Intervals (Weekdays)",
+     xlab="Interval",
+     ylab="Average Step Count",
+     type="l")
+meanStepsByInterval <- aggregate(steps ~ interval, imputed[imputed$dayType == "weekend",], "mean")
+plot(meanStepsByInterval,
+     main="Average Daily Activity in 5-minute Intervals (Weekends)",
+     xlab="Interval",
+     ylab="Average Step Count",
+     type="l")
+```

@@ -74,7 +74,7 @@ for (i in inds) {
 ##
 totalStepsByDay <- aggregate(steps ~ date, imputed, "sum")
 hist(totalStepsByDay$steps, 
-     main = "Histogram of Total Steps Per Day",
+     main = "Histogram of Total Steps Per Day (Imputed Data)",
      xlab = "Steps Per Day")
 ```
 

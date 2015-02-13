@@ -96,7 +96,11 @@ library("lattice")
 days <- weekdays(as.POSIXlt(imputed$date))
 imputed$dayType <- as.factor(ifelse(days %in% c("Saturday", "Sunday"), "weekend", "weekday"))
 meanStepsByInterval <- aggregate(steps ~ interval + dayType, imputed, "mean")
-xyplot(steps ~ interval | dayType, data = meanStepsByInterval, type="l", layout=c(1,2))
+xyplot(steps ~ interval | dayType,
+       data = meanStepsByInterval,
+       main="Comparison of Activity Between Weekends and Weekdays",
+       type="l",
+       layout=c(1,2))
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
